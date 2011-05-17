@@ -1,0 +1,28 @@
+Done:
+	Google search
+	Go to website
+	Launch application
+	Weather
+	Coin Flip
+
+To Do:
+
+	pattern match sites
+	
+	Commands:
+		Calculator
+		Calendar
+		Open file
+		Facebook status
+		Tweet
+		Reminder
+		To Do
+		Tic-Tac-Toe
+		Comp temp
+		Free Memory
+		Itunes play
+		Search Amazon
+		Search eBay
+		Search Craigslist
+	
+	
