@@ -1,0 +1,18 @@
+Sam is a multi-purpose desktop widget.  
+
+-It is ultimately meant to run as a daemon, 
+and to become active on special keystroke.
+	+ Right now it is only command-line.  Need to run in the BG
+	and listen for key-combination
+
+-Right now Sam is designed to run on OSX, and certain features 
+will fail in other environments.
+	+ Need to add support for other environments
+
+-Sam attempts to parse and interpret the input, and to match
+it against rules in a dictionary
+	
+-Rules are mini-classes, designated by keywords.  If one of those keywords matches,
+the rule fires, and the action method for that rule class is executed.
+	+ Need to add more rules
+
