@@ -29,7 +29,7 @@ int main()
 	
 	//printf("%d\n",length(list));
 	//printf("%d\n",find(list, 100));
-	//printList(list);
+	printList(list);
 
 	return 0;
 }
