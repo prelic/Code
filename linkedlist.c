@@ -13,22 +13,16 @@ void printList(list_el* head);
 void append(list_el** head, int value);
 int find(list_el* head, int value);
 int length(list_el* head);
-
+void delete(list_el** head, int value);
 int main()
 {
 	list_el* list = NULL;
 	int i;
-	for(i = 0; i < 100; i+=2)
+	for(i = 0; i < 10; i++)
 	{
 		append(&list, i);
 	}
-	for(i = 1; i < 100; i+=2)
-	{
-		insert(&list,i);
-	}
-	
-	//printf("%d\n",length(list));
-	//printf("%d\n",find(list, 100));
+	delete(&list, 9);
 	printList(list);
 
 	return 0;
@@ -168,4 +162,30 @@ int length(list_el* head)
 	}
 	return i;
 
+}
+//------------------
+//Delete takes:
+//	head - list to delete from
+//	val - value to be deleted
+//
+//
+//Deletes val from list
+//------------------
+void delete(list_el** head, int value)
+{
+	if((*head)->val == value)
+	{
+		(*head) = (*head)->next;
+	}
+	else
+	{
+		list_el* it = *head;
+		while(it->next->val != value)
+			it = it->next;
+		if(it->next)
+			it->next = it->next->next;
+		else
+			it->next = NULL;
+		
+	}
 }
