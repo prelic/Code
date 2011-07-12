@@ -2,8 +2,7 @@
 import webbrowser
 import subprocess
 import random
-import urllib
-from xml.dom import minidom
+import urllib2
 import time
 
 #dictionary containing valid rules
@@ -38,7 +37,7 @@ class knowledge:
 		self.add(GOOGLE, GOOGLE().SEARCH)
 		
 		#go to specific url
-		self.add(WEBSITE, WEBSITE().GO)
+		self.add(WEBSITE, WEBSITE().LAUNCH)
 		
 		#open an application
 		self.add(APP, APP().LAUNCH)
@@ -69,9 +68,14 @@ class GOOGLE (rule):
 	
 class WEBSITE (rule):
 	rule_name = "WEBSITE"
-	
-	def GO(self, url):
-		webbrowser.open("http://www."+url)
+        def LAUNCH(self, keywords):
+	        if url.find("http://") != -1:
+		        url = url.replace("http://","")
+		
+	        if url.find("www.") != -1:
+		        url = url.replace("www.","")
+		
+	        webbrowser.open("http://www."+url)
 
 class APP (rule):
 	rule_name = "APP"
@@ -88,29 +92,56 @@ class COINFLIP (rule):
 			print "Heads"
 		else:
 			print "Tails"
-			
+
 class WEATHER (rule):
-	rule_name = "WEATHER"
-	URL = "http://xml.weather.yahoo.com/forecastrss?p=%s"
-	NS = "http://xml.weather.yahoo.com/ns/rss/1.0"
-	def LAUNCH(self, keywords):
-		url = self.URL % keywords
-		dom = minidom.parse(urllib.urlopen(url))
-		forecast = []
-		for n in dom.getElementsByTagNameNS(self.NS, "forecast"):
-			forecast.append({
-				"date": n.getAttribute("date"),
-				"low": n.getAttribute("low"),
-				"high": n.getAttribute("high"),
-				"condition": n.getAttribute("text")
-			})
-		ycondition = dom.getElementsByTagNameNS(self.NS, "condition") [0]
-		title = dom.getElementsByTagName("title")[0].firstChild.data
-		title = title.replace("Yahoo! Weather - ","")
-		print "Title: ", title
-		print "Temp: ", ycondition.getAttribute("temp")
-		print "Forecast:",ycondition.getAttribute("text")
-		
+    rule_name = "WEATHER"
+    
+    def LAUNCH(self, keywords):
+        if str.upper(keywords).find("FORECAST") != -1:
+            keywords = str.upper(keywords).replace("FORECAST", "")
+            keywords = keywords.lstrip(" ")
+            forecast=1
+        else:
+            forecast=0
+        
+        url = "http://www.google.com/ig/api?weather="
+        try:
+            f = urllib2.urlopen(url+keywords)
+        except:
+            print "error opening url"
+        
+        s = f.read()
+
+        location = s.split("<city data=\"")[-1].split("\"")[0]
+        cond = s.split("<current_conditions><condition data=\"")[-1].split("\"")[0]
+        temp = s.split("<temp_f data=\"")[-1].split("\"")[0]
+        if forecast == 0:
+            if cond == "<?xml version=":
+                print "invalid city"
+            else:
+                print "\n"
+                print "Location: ", location
+                print "Temp: ", temp
+                print "Condition: ", cond
+            
+        else:
+            print "\n"
+            print location
+            print "Current Temp: ", temp
+            print "Current Condition: ", cond
+            print "\n"
+            day = s.split("<day_of_week data=\"")
+            for i in day:
+                day = i.split("\"")[0]
+                low = i.split("<low data=\"")[-1].split("\"")[0]
+                high = i.split("<high data=\"")[-1].split("\"")[0]
+                cond = i.split("<condition data=\"")[-1].split("\"")[0]
+                if day != "<?xml version=":
+                    print day
+                    print "Low -> High", low, "->", high
+                    print "Condition: ", cond
+                    print "\n"
+            
 
 #------------------------------------------------------------			
 
@@ -189,3 +220,4 @@ while True:
 		break;
 	else:
 		parseInput(input)
+        print "\n"
